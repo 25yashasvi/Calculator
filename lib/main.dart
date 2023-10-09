@@ -7,13 +7,12 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CALCULATOR',
       theme: ThemeData(
-         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'CALCULATOR',
@@ -67,10 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: Text(widget.title,
 
-        style:TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 30
-        ),
+          style:TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30
+          ),
         ),
 
       ),
@@ -176,6 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
   dynamic finalResult = '';
   dynamic operation = '';
   dynamic prev_opr = '';
+  dynamic a='';
 
   String add() {
     result = (firstnum + secnum).toString();
@@ -198,6 +198,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String div() {
     result = (firstnum / secnum).toString();
     firstnum = double.parse(result);
+    return result;
+  }
+
+  String percentage()
+  {
+    result=((firstnum/100)*secnum).toString();
+    firstnum=double.parse(result);
     return result;
   }
 
@@ -230,34 +237,40 @@ class _MyHomePageState extends State<MyHomePage> {
           {
             finalResult = div();
           }
+        case '%':
+          {
+            finalResult=percentage();
+          }
       }
     }
 
-      else if (options == "+" || options == "-" || options == "X" || options == "/" || options=="=") {
-        if (firstnum == 0) {
-          firstnum = double.parse(result);
-        }
-        else {
-          secnum = double.parse(result);
-        }
-        switch (operation) {
-          case "+":
-            finalResult = add();
-          case "-":
-            finalResult = sub();
-          case "X":
-            finalResult = mul();
-          case "/":
-            finalResult = div();
-        }
-        prev_opr = operation ;
-        operation  = options;
-        result = '';
+    else if (options == "+" || options == "-" || options == "X" || options == "/" || options=="="||options=="%") {
+      if (firstnum == 0) {
+        firstnum = double.parse(result);
       }
-    else if(options == '%') {
-      finalResult = firstnum / 100;
+      else {
+        secnum = double.parse(result);
+      }
+      switch (operation) {
+        case "+":
+          finalResult = add();
+        case "-":
+          finalResult = sub();
+        case "X":
+          finalResult = mul();
+        case "/":
+          finalResult = div();
+        case "%":
+          finalResult=percentage();
+      }
 
-    } else if(options == '.') {
+
+      prev_opr = operation ;
+      operation  = options;
+      result = '';
+    }
+
+    else if(options == '.') {
       if(!result.toString().contains('.')) {
         result = result.toString()+'.';
       }
@@ -272,15 +285,24 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     else  {
-        result = result + options;
-        finalResult = result;
-      }
+      result = result + options;
+      finalResult = result;
+    }
 
     setState(() {
-      text = finalResult;
-      print(text);
-    });
+      if(options=='=')
+        text=finalResult;
+      else if(options=='C') {
+        text = finalResult;
+        a='';
+      }
+      else
+      {text=a+options;
+      a=text;}
+    }
+    );
   }
+
 }
 
 
